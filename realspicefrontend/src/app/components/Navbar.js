@@ -9,12 +9,12 @@ import { useRef } from 'react';
 import { IoIosAddCircle } from "react-icons/io";
 import { IoIosRemoveCircle } from "react-icons/io";
 import { IoBagCheckOutline } from "react-icons/io5";
-
+import { LuUserCircle } from "react-icons/lu";
 import {useAppContext}  from '@/app/context/CartContext';
 
 
 const Navbar = () => {
-  const{cart,addToCart,removeItem,clearCart,addItem} = useAppContext();
+  const{cart,addToCart,removeItem,clearCart,addItem,subTotal} = useAppContext();
   const toggleCart=()=>{
     if(ref.current.classList.contains('translate-x-full')){
       ref.current.classList.remove('translate-x-full');
@@ -27,7 +27,7 @@ const Navbar = () => {
   const ref = useRef();
   return (
     <>
-    <nav>
+    <nav className='sticky top-0 z-10 bg-white'>
     <header className="text-gray-600 body-font">
   <div className="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center shadow-md">
     <Link href={"/"} className="flex title-font font-medium items-center cursor-pointer text-gray-900 mb-4 md:mb-0">
@@ -39,35 +39,42 @@ const Navbar = () => {
       <Link href={"/khakhra"} className="mr-5 hover:text-gray-900 font-bold cursor-pointer">Snacks</Link>
       <Link href={"/product/feeltheflavours"} className="mr-5 hover:text-gray-900 font-bold cursor-pointer">Products</Link>
     </nav>
-    <div onClick={toggleCart} className="inline-flex items-center py-1 px-3 text-2xl focus:outline-none hover:bg-gray-200 rounded  mt-4 md:mt-0"><FaCartShopping />
+    <div className="md:relative md:right-0 md:top-0 absolute top-5 right-[8%] ">
+    <Link href={"/login"}><div className="inline-flex items-center py-1 px-1 text-2xl focus:outline-none hover:bg-gray-200 rounded  mt-4 md:mt-0"><LuUserCircle/></div></Link>
+    <div onClick={toggleCart} className="inline-flex items-center py-1 px-1 text-2xl focus:outline-none hover:bg-gray-200 rounded  mt-4 md:mt-0"><FaCartShopping />
+    </div>
     </div>
   </div>
 </header>
-    </nav>
+    
 
 
     
-    <div ref={ref} className='sideBar absolute right-0 top-0 bg-green-300 h-full xl:w-1/4  md:w-2/4 sm:w-2/4 w-full transform transition-transform translate-x-full'>
+    <div ref={ref} className='sideBar z-20 absolute right-0 top-0 bg-gray-200 h-[100vh] xl:w-1/4  md:w-2/4 sm:w-2/4 w-full transform transition-transform translate-x-full'>
     <div onClick={toggleCart} className='absolute right-3 top-6 text-2xl text-red-500'><IoIosCloseCircle /></div>
       <div onClick={toggleCart} className='font-bold text-xl text-center p-5 mt-5'>Shopping Cart</div>
       <div><ol className='list-decimal ml-10 font-semibold space-y-5'>
         {Object.keys(cart).length==0 && <div>Cart is empty!!</div>}
        {Object.keys(cart).map((k)=>{return <div key={k}><li >
           <div className='flex'>
-          <div className='w-2/4'>{cart[k].name}</div>
-          <div className='w-1/4 flex items-center justify-center font-extrabold'><IoIosRemoveCircle onClick={()=>{removeItem(k)}} className='text-xl mr-2 text-red-500'/>{cart[k].qty}<IoIosAddCircle onClick={()=>{addItem(k)}} className='text-xl ml-2 text-red-500'/></div>
-          <div className='w-1/4 flex justify-center items-center font-extrabold '>{cart[k].price}</div>
+          <div className='w-2/4'>{cart[k].name+" (PackOf- "+cart[k].packOf+")"}</div>
+          <div className='w-1/4 flex items-center justify-center font-extrabold'><IoIosRemoveCircle onClick={()=>{removeItem(k)}} className='text-xl mr-2 text-red-500'/><div>{cart[k].qty}</div><IoIosAddCircle onClick={()=>{addItem(k)}} className='text-xl ml-2 text-red-500'/></div>
+          <div className='w-1/4 flex justify-center items-center font-extrabold '>₹{cart[k].price}</div>
           </div>
           </li> </div>})
 }
+      <div className='flex '>
+        <div className='w-3/4 flex items-center justify-center font-extrabold'>Subtotal</div>
+        <div className='w-1/4 flex items-center justify-center font-extrabold'>₹{subTotal}</div>
+      </div>
       </ol>
       <div className='flex'>
-        <button className="flex mx-auto mt-8 ml-8 mr-0 text-white bg-red-500 border-1 py-2 px-3 focus:outline-none hover:bg-red-600 rounded text-sm">Checkout<IoBagCheckOutline className='m-auto ml-1'/></button>
-        <button onClick={()=>{clearCart()}} className="flex mx-auto mt-8 ml-2 text-white bg-red-500 border-1 py-2 px-3 focus:outline-none hover:bg-red-600 rounded text-sm">Clear Cart</button>
+        <Link href={"/checkout"} onClick={toggleCart} className="flex mx-auto mt-8 ml-8 mr-0 text-white bg-red-500 border-1 py-2 px-3 focus:outline-none hover:bg-red-600 rounded text-sm"><button className="flex">Checkout<IoBagCheckOutline className='m-auto ml-1'/></button> </Link>
+        <button onClick={()=>{clearCart()}} className="flex mx-auto mt-8 ml-2 text-white bg-red-500 border-1 py-2 px-3 focus:outline-none hover:bg-red-600 rounded text-sm disabled">Clear Cart</button>
       </div>
       </div>
       </div>
-    
+      </nav>
     </>
   )
 }

@@ -1,9 +1,12 @@
 "use client";
+
+import { useRouter } from 'next/navigation'
 import { createContext, useContext, useEffect, useState } from "react";
 
 const AppContext = createContext();
 
 export function CartContext({children}) {
+    const router = useRouter();
     const [cart,setCart] = useState({});
     const [subTotal,setSubTotal] = useState(0);
 
@@ -30,14 +33,14 @@ export function CartContext({children}) {
     }
 
     //Adding item to cart
-    const addToCart=(itemCode,name,price,qty,packOf)=>{
+    const addToCart=(itemCode,name,price,qty,packOf,image)=>{
         let newCart = {...cart};
         if(itemCode in cart){
             newCart[itemCode].qty = newCart[itemCode].qty + qty;
             const sTotal = subTotal+qty*price;
             setSubTotal(sTotal);
         }else{
-            newCart[itemCode] = {name,price,qty,packOf};
+            newCart[itemCode] = {name,price,qty,packOf,image};
             const sTotal = subTotal+qty*price;
             setSubTotal(sTotal);
         }
@@ -45,6 +48,15 @@ export function CartContext({children}) {
         saveCart(newCart);
         
         
+    }
+    //Buy Now Button
+    const buyNow=(itemCode,name,price,qty,packOf,image)=>{
+        let newCart = {};
+        newCart[itemCode] = {name,price,qty,packOf,image};      
+        setCart(newCart);
+        saveCart(newCart);
+        router.push("/checkout");
+           
     }
     //Clearing the cart
     const clearCart=()=>{
@@ -90,7 +102,7 @@ export function CartContext({children}) {
     }
    
   return (
-    <AppContext.Provider value={{cart,addToCart,removeItem,clearCart,addItem,removeItemFromCart,subTotal}}>
+    <AppContext.Provider value={{cart,addToCart,removeItem,clearCart,addItem,removeItemFromCart,subTotal,buyNow}}>
             {children}
         </AppContext.Provider>
   )

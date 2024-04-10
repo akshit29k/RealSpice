@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCartShopping } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import Image from 'next/image';
@@ -11,10 +11,18 @@ import { IoIosRemoveCircle } from "react-icons/io";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { LuUserCircle } from "react-icons/lu";
 import {useAppContext}  from '@/app/context/CartContext';
+import LoadingBar from 'react-top-loading-bar'
+import { usePathname } from 'next/navigation';
+import { AiOutlineLogin } from "react-icons/ai";
 
 
 const Navbar = () => {
+  const pathname = usePathname();
   const{cart,addToCart,removeItem,clearCart,addItem,subTotal} = useAppContext();
+  const [progress, setProgress] = useState(20);
+  useEffect(()=>{
+    setProgress(100);
+  },[pathname])
   const toggleCart=()=>{
     if(ref.current.classList.contains('translate-x-full')){
       ref.current.classList.remove('translate-x-full');
@@ -27,6 +35,13 @@ const Navbar = () => {
   const ref = useRef();
   return (
     <>
+     <LoadingBar
+        color='#f11946'
+        progress={progress}
+        staticStart={20}
+        waitingTime={300}
+        onLoaderFinished={() => setProgress(0)}
+      />
     <nav className='sticky top-0 z-10 bg-white'>
     <header className="text-gray-600 body-font">
   <div className="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center shadow-md">
@@ -37,10 +52,12 @@ const Navbar = () => {
       <Link href={"/masale"} className="mr-5 hover:text-gray-900 font-bold cursor-pointer">Spices</Link>
       <Link href={"/pickle"} className="mr-5 hover:text-gray-900 font-bold cursor-pointer">Pickle</Link>
       <Link href={"/khakhra"} className="mr-5 hover:text-gray-900 font-bold cursor-pointer">Snacks</Link>
-      <Link href={"/product/feeltheflavours"} className="mr-5 hover:text-gray-900 font-bold cursor-pointer">Products</Link>
+      <Link href={"/product/feeltheflavours"} className="mr-5 hover:text-gray-900 font-bold cursor-pointer">Combos</Link>
     </nav>
     <div className="md:relative md:right-0 md:top-0 absolute top-5 right-[8%] ">
-    <Link href={"/login"}><div className="inline-flex items-center py-1 px-1 text-2xl focus:outline-none hover:bg-gray-200 rounded  mt-4 md:mt-0"><LuUserCircle/></div></Link>
+      {localStorage.getItem("token")==null && <Link href={"/login"}><div className="inline-flex items-center py-1 px-1 text-2xl focus:outline-none hover:bg-gray-200 rounded  mt-4 md:mt-0"><AiOutlineLogin /></div></Link>}
+      {localStorage.getItem("token")!=null && <div className="inline-flex items-center py-1 px-1 text-2xl focus:outline-none hover:bg-gray-200 rounded mt-4 md:mt-0"><LuUserCircle/></div>}
+     
     <div onClick={toggleCart} className="inline-flex items-center py-1 px-1 text-2xl focus:outline-none hover:bg-gray-200 rounded  mt-4 md:mt-0"><FaCartShopping />
     </div>
     </div>
@@ -50,7 +67,7 @@ const Navbar = () => {
 
 
     
-    <div ref={ref} className='sideBar z-20 absolute right-0 top-0 bg-gray-200 h-[100vh] xl:w-1/4  md:w-2/4 sm:w-2/4 w-full transform transition-transform translate-x-full'>
+    <div ref={ref} style={{scrollbarWidth:"none"}} className='sideBar z-20 absolute overflow-y-scroll right-0 top-0 bg-gray-200 h-[100vh] xl:w-1/4  md:w-2/4 sm:w-2/4 w-full transform transition-transform translate-x-full'>
     <div onClick={toggleCart} className='absolute right-3 top-6 text-2xl text-red-500'><IoIosCloseCircle /></div>
       <div onClick={toggleCart} className='font-bold text-xl text-center p-5 mt-5'>Shopping Cart</div>
       <div><ol className='list-decimal ml-10 font-semibold space-y-5'>

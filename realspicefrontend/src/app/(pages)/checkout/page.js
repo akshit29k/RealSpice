@@ -82,15 +82,15 @@ const Checkout = () => {
 </form>
 </div>
 <div className='flex justify-center items-center '>
-<form  className="w-full max-w-6xl border-[1px] m-5 mt-0 border-opacity-10 border-r-2 rounded-md p-5">
-        <div className="block uppercase tracking-wide text-gray-700 text-lg font-bold">Review Your Cart</div>
+<form  className="w-full max-w-6xl border-[1px] m-5 mb-8 border-opacity-10 border-r-2 rounded-md p-5">
+        <div className="block uppercase tracking-wide mb-2 text-gray-700 text-lg font-bold">Review Your Cart</div>
 <div className="font-[sans-serif] lg:flex">
-      <div className="grid lg:w-2/3 p-6">
+      <div style={{scrollbarWidth:"none"}} className="lg:overflow-hidden lg:overflow-y-scroll lg:h-[600px] grid lg:w-2/3 p-6">
       {Object.keys(cart).length==0 && <div>Cart is empty!!</div>}
        {Object.keys(cart).map((k)=>{return <div key={k} className="grid md:grid-cols-4  items-center gap-8 py-2">
             <div className=" md:col-span-2 flex items-center gap-6">
-              <div className="max-[360px]:hidden w-32 h-22 shrink-0 shadow-[0_0px_4px_0px_rgba(6,81,237,0.2)] p-4">
-                <img  src='https://readymadeui.com/images/product11.webp' className="w-full  h-full object-contain rounded-md" />
+              <div className="max-[360px]:hidden w-32 h-22 shrink-0 shadow-[0_0px_4px_0px_rgba(6,81,237,0.2)]">
+                <img  src={cart[k].image} className="w-full  h-full object-contain rounded-md" />
               </div>
               <div>
                 <h3 className="text-lg font-extrabold text-[#333]">{cart[k].name}</h3>

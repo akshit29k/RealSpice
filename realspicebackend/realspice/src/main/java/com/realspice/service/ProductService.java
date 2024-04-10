@@ -11,4 +11,6 @@ public interface ProductService {
     public Product getProductBySlug(String slug);
     public String addProductList(List<Product> product);
     public String updateProducts(List<Product> product);
+
+    List<Product> getProductsByCategory(String category);
 }

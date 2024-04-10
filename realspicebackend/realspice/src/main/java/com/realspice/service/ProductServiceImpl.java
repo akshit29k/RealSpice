@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public List<Product> getProducts() {
         try {
             return productRepository.findAll();
@@ -70,6 +72,12 @@ public class ProductServiceImpl implements ProductService{
             }
         });
         return "Updated Successfully";
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(String category) {
+        return productRepository.findByCategory(category).orElseThrow(()->new NotFoundException("Product Not Found"));
+
     }
 
     public Product mapUpdateToExisting(Product upPro,Product exPro){

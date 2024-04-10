@@ -34,6 +34,7 @@ public class AppUser {
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 6,message = "Password must be at least 6 characters long")
     private String password;
+    private String roles;
     @OneToMany(mappedBy = "appUser",cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<UserOrder> userOrder;
